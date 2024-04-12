@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Mark Entry real</title>
+<style>
+  .box{
+    margin-top: 50px;
+    margin-left: 40%;
+  }
+
+  /* INSIDE ALL BUTTONS'S OPTIONS */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #85ffef;
+    font-size: 20px;
+    padding: 12px 16px;
+    cursor: pointer;
+  }
+
+  /* INSIDE ALL BUTTONS'S OPTIONS'S TEXT */
+  .dropdown-content a {
+    display: block;
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .dropdown-content a:hover {
+    background-color: rgb(0, 198, 198);
+  }
+
+  /* INSIDE ALL BUTTONS*/
+  .dropbtn{
+    background-color: aquamarine;
+    text-align: center;
+    height: 60px;
+    width: 200px;
+    font-size: 20px;
+    border: none;
+    border-radius: 20px;
+    margin-bottom: 10px; 
+    cursor: pointer;
+  }
+
+  .dropbtn:hover{
+    background-color: rgb(72, 239, 183);
+    transform: scale(1.1);
+  }
+  
+  #semesterDropdown {
+    margin-top: 10px;
+  }
+
+  .okBtn {
+    display: none;
+    background-color: red;
+    color: white;
+    display: none;
+  }
+  .okBtn:hover{
+    background-color: orange;
+  }
+  .okBtn:active{
+    background-color: orangered;
+  }
+
+</style>
+</head>
+<body style="background-color: rgb(191, 191, 4);">
+
+<div class="box">
+   
+<div class="dropdown">
+  <button id="degreeBtn" class="dropbtn" onclick="toggleDropdown('degreeContent')"><b>Choose Degree</b></button>
+  <div class="dropdown-content" id="degreeContent">
+    <a  onclick="selectDegree('be')">B.E</a>
+    <a  onclick="selectDegree('btech')">B.Tech</a>
+  </div>
+</div>
+
+<div class="dropdown" id="departmentDropdown" style="display: none;">
+  <button id="departmentBtn" class="dropbtn" onclick="toggleDropdown('departmentContent')"> <b> Choose Department</b> </button>
+  <div class="dropdown-content" id="departmentContent"></div>
+</div>
+
+<div class="dropdown" id="semesterDropdown" style="display: none;">
+  <button id="semesterBtn" class="dropbtn" onclick="toggleDropdown('semesterContent')"><b>Choose Semester</b></button>
+  <div class="dropdown-content" id="semesterContent"></div>
+</div>
+
+<div class="dropdown" id="examTypeDropdown" style="display: none;">
+  <button id="examTypeBtn" class="dropbtn" onclick="toggleDropdown('examTypeContent')"><b>Choose Exam Type</b></button>
+  <div class="dropdown-content" id="examTypeContent">
+    <a onclick="selectExamType('periodic')">Periodic</a>
+    <a onclick="selectExamType('semester')">Semester</a>
+    <a onclick="selectExamType('optional')">Optional</a>
+  </div>
+</div>
+
+<div class="dropdown" id="examSubtypeDropdown" style="display: none;">
+  <button id="examSubtypeBtn" class="dropbtn " onclick="toggleDropdown('examSubtypeContent')"><b>Choose Exam Subtype</b></button>
+  <div class="dropdown-content" id="examSubtypeContent"></div>
+</div>
+
+<div class="dropdown" id="courseDropdown" style="display: none;">
+  <button id="courseBtn" class="dropbtn" onclick="toggleDropdown('courseContent')"><b>Choose Course</b></button>
+  <div class="dropdown-content" id="courseContent">
+    <a onclick="selectCourse('Mathamatics')">Mathamatics</a>
+    <a onclick="selectCourse('Physics')">Physics</a>
+    <a onclick="selectCourse('Chemistry')">Chemistry</a>
+    <a onclick="selectCourse('Computing')">Computing</a>
+  </div>
+</div>
+
+<button id="okBtn" class="dropbtn okBtn" onclick="openExcel()">OK</button>
+</div>
+
+<script>
+  const departments = {
+    be: ["Computer Science", "Electrical", "Mechanical", "Civil"],
+    btech: ["Information Technology", "AIDS", "AIML", "CSBS"]
+  };
+
+  function toggleDropdown(contentId) {
+    var content = document.getElementById(contentId);
+    if (content.style.display === "none") {
+      content.style.display = "block";
+    } else {
+      content.style.display = "none";
+    }
+  }
+
+  function selectDegree(degree) {
+    const departmentDropdown = document.getElementById("departmentDropdown");
+    const departmentOptions = document.getElementById("departmentContent");
+    const degreeBtn = document.getElementById("degreeBtn");
+    degreeBtn.textContent = degree.toUpperCase();
+    departmentOptions.innerHTML = "";
+    departments[degree].forEach(department => {
+      const departmentLink = document.createElement("a");
+      departmentLink.href = "#";
+      departmentLink.textContent = department;
+      departmentLink.onclick = function() { selectDepartment(department); };
+      departmentOptions.appendChild(departmentLink);
+    });
+    departmentDropdown.style.display = "inline-block";
+    document.getElementById('degreeContent').style.display = 'none';
+  }
+
+  function selectDepartment(department) {
+    const departmentBtn = document.getElementById("departmentBtn");
+    departmentBtn.textContent = department;
+    showSemesterOptions();
+    document.getElementById('departmentContent').style.display = 'none';
+  }
+
+  function showSemesterOptions() {
+    const semesterDropdown = document.getElementById("semesterDropdown");
+    const semesterOptions = document.getElementById("semesterContent");
+    semesterOptions.innerHTML = ""; 
+    for (let i = 1; i <= 8; i++) {
+      const semesterLink = document.createElement("a");
+      semesterLink.href = "#";
+      semesterLink.textContent = "Semester " + i;
+      semesterLink.onclick = function() { selectSemester(i); };
+      semesterOptions.appendChild(semesterLink);
+    }
+    semesterDropdown.style.display = "block"; 
+  }
+
+  function selectSemester(semester) {
+    const semesterBtn = document.getElementById("semesterBtn");
+    semesterBtn.textContent = "Semester " + semester;
+    document.getElementById('semesterContent').style.display = 'none';
+    document.getElementById('examTypeDropdown').style.display = 'inline-block';
+  }
+
+  function selectExamType(examType) {
+    const examTypeBtn = document.getElementById("examTypeBtn");
+    examTypeBtn.textContent = examType.charAt(0).toUpperCase() + examType.slice(1);
+    document.getElementById('examTypeContent').style.display = 'none';
+    if (examType === 'periodic') {
+      showPeriodicOptions();
+    } else if (examType === 'semester') {
+      document.getElementById('examSubtypeDropdown').style.display = 'none';
+      showCourseOptions();
+    } else if (examType === 'optional') {
+      showOptionalSubtypeOptions();
+    }
+  }
+
+  function showPeriodicOptions() {
+    const examSubtypeDropdown = document.getElementById("examSubtypeDropdown");
+    const examSubtypeOptions = document.getElementById("examSubtypeContent");
+    examSubtypeOptions.innerHTML = ""; 
+    for (let i = 1; i <= 2; i++) {
+      const examSubtypeLink = document.createElement("a");
+      examSubtypeLink.href = "#";
+      examSubtypeLink.textContent = "Periodic " + i;
+      examSubtypeLink.onclick = function() { selectExamSubtype("Periodic " + i); };
+      examSubtypeOptions.appendChild(examSubtypeLink);
+    }
+    examSubtypeDropdown.style.display = "block"; 
+  }
+
+  function showOptionalSubtypeOptions() {
+    const examSubtypeDropdown = document.getElementById("examSubtypeDropdown");
+    const examSubtypeOptions = document.getElementById("examSubtypeContent");
+    examSubtypeOptions.innerHTML = ""; 
+    const subtypes = ["Periodic Optional", "Semester Optional"];
+    subtypes.forEach(subtype => {
+      const examSubtypeLink = document.createElement("a");
+      examSubtypeLink.href = "#";
+      examSubtypeLink.textContent = subtype;
+      examSubtypeLink.onclick = function() { selectExamSubtype(subtype); };
+      examSubtypeOptions.appendChild(examSubtypeLink);
+    });
+    examSubtypeDropdown.style.display = "block"; 
+  }
+
+  function selectExamSubtype(subtype) {
+    const examSubtypeBtn = document.getElementById("examSubtypeBtn");
+    examSubtypeBtn.textContent = subtype;
+    document.getElementById('examSubtypeContent').style.display = 'none';
+    showCourseOptions();
+  }
+
+  function showCourseOptions() {
+    const courseDropdown = document.getElementById("courseDropdown");
+    courseDropdown.style.display = "block";
+  }
+
+  function selectCourse(course) {
+    const courseBtn = document.getElementById("courseBtn");
+    courseBtn.textContent = course;
+    document.getElementById('courseContent').style.display = 'none';
+    showOkButton();
+  }
+
+  function showOkButton() {
+    document.getElementById('okBtn').style.display = 'inline-block';
+  }
+
+  function openExcel() {
+    window.open('https://docs.google.com/spreadsheets/d/1CIBN9i_Jwh1gxHAFs-ejToboW2rd43CZREyonk4wkLI/edit?usp=sharing', '_blank');
+  }
+</script>
+
+</body>
+</html>
